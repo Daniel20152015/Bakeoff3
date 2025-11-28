@@ -48,7 +48,7 @@
 const keys = [
     "q","w","e","r","t","y","u","i","o","p",
     "a","s","d","f","g","h","j","k","l",
-    "z","x","c","v","b","n","m"
+    "z","x","c","v","b","n","m", " ", "X"
 ];
 
 const kb = document.getElementById("keyboard");
@@ -61,7 +61,13 @@ keys.forEach(letter => {
     btn.textContent = letter;
 
     btn.onclick = () => {
-        output.value += letter;
+        if (letter === " ") {
+            output.value += " ";
+        } else if (letter === "X") {
+            output.value = output.value.slice(0, -1);
+        } else {
+            output.value += letter;
+        }
     };
 
     kb.appendChild(btn);
