@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Mini QWERTY Keyboard</title>
+<style>
+    /* Container exactly 1 inch by 1 inch */
+    #keyboard {
+        width: 1in;
+        height: 1in;
+        border: 1px solid #333;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        grid-auto-rows: 1fr;
+        gap: 1px;
+        padding: 1px;
+        box-sizing: border-box;
+    }
+
+    /* Tiny keys */
+    .key {
+        font-size: 6px;
+        padding: 0;
+        margin: 0;
+        background: #eee;
+        border: 1px solid #aaa;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    #output {
+        margin-top: 10px;
+        width: 100%;
+        height: 40px;
+    }
+</style>
+</head>
+<body>
+
+<h3>Mini On-Screen Keyboard</h3>
+
+<div id="keyboard"></div>
+
+<textarea id="output" placeholder="Typed text will appear here..."></textarea>
+
+<script>
+const keys = [
+    "q","w","e","r","t","y","u","i","o","p",
+    "a","s","d","f","g","h","j","k","l",
+    "z","x","c","v","b","n","m", " ", "X"
+];
+
+const kb = document.getElementById("keyboard");
+const output = document.getElementById("output");
+
+function insertAtCursor(text) {
+    const start = output.selectionStart;
+    const end = output.selectionEnd;
+    const before = output.value.substring(0, start);
+    const after = output.value.substring(end);
+
+    output.value = before + text + after;
+
+    const newPos = start + text.length;
+    output.selectionStart = newPos;
+    output.selectionEnd = newPos;
+    output.focus();
+}
+
+function backspaceAtCursor() {
+    const start = output.selectionStart;
+    const end = output.selectionEnd;
+
+    if (start !== end) {
+        const before = output.value.substring(0, start);
+        const after = output.value.substring(end);
+        output.value = before + after;
+        output.selectionStart = start;
+        output.selectionEnd = start;
+    } else if (start > 0) {
+        const before = output.value.substring(0, start - 1);
+        const after = output.value.substring(end);
+        output.value = before + after;
+        output.selectionStart = start - 1;
+        output.selectionEnd = start - 1;
+    }
+    output.focus();
+}
+
+// Build the keyboard buttons
+keys.forEach(letter => {
+    const btn = document.createElement("div");
+    btn.className = "key";
+    btn.textContent = letter;
+
+    btn.onclick = () => {
+        if (letter === " ") {
+            insertAtCursor(" ");
+        } else if (letter === "X") {
+            backspaceAtCursor();
+        } else {
+            insertAtCursor(letter);
+        }
+    };
+
+    kb.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
