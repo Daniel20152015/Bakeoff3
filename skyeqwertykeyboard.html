@@ -1,4 +1,4 @@
-<!-- qwertykeyboardREAL.html -->
+<!-- skyeqwertykeyboard.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,11 +47,14 @@ class Key {
   }
   
   void drawKey() {
+    stroke(0);
+    strokeWeight(0.1);
     fill(200);
     rect(x, y, w, h, 5); // rounded rectangle
     fill(0);
     textAlign(CENTER, CENTER);
     text(label, x + w/2, y + h/2);
+    noStroke();
   }
   
   boolean isPressed() {
@@ -65,7 +68,7 @@ void setupKeyboard() {
   String[] row2 = {"a","s","d","f","g","h","j","k","l"};
   String[] row3 = {"z","x","c","v","b","n","m"};
   
-  float keyW = sizeOfInputArea / 10;  // divide area width by max keys in a row
+  //float keyW = sizeOfInputArea / 10;  // divide area width by max keys in a row
   float keyH = sizeOfInputArea / 4;   // divide area height by number of rows
   float startX = width/2 - sizeOfInputArea/2;
   float startY = height/2 - sizeOfInputArea/2;
@@ -73,18 +76,22 @@ void setupKeyboard() {
   ArrayList<Key> tempKeys = new ArrayList<Key>();
   
   // row1
+  float keyW = sizeOfInputArea / row1.length;
   for (int i=0; i<row1.length; i++) {
     tempKeys.add(new Key(row1[i], startX + i*keyW, startY, keyW, keyH));
   }
   // row2
+  float keyW = sizeOfInputArea / row2.length;
   for (int i=0; i<row2.length; i++) {
-    tempKeys.add(new Key(row2[i], startX + i*keyW + keyW/2, startY + keyH, keyW, keyH)); // offset row
+    tempKeys.add(new Key(row2[i], startX + i*keyW, startY + keyH, keyW, keyH)); // offset row
   }
   // row3
+  float keyW = sizeOfInputArea / row3.length;
   for (int i=0; i<row3.length; i++) {
-    tempKeys.add(new Key(row3[i], startX + i*keyW + keyW, startY + 2*keyH, keyW, keyH)); // offset more
+    tempKeys.add(new Key(row3[i], startX + i*keyW, startY + 2*keyH, keyW, keyH)); // offset more
   }
 
+  float keyW = sizeOfInputArea / 10;
   float row4Y = startY + 3*keyH;
 
   tempKeys.add(new Key("space", startX + keyW*1, row4Y, keyW*6, keyH));
@@ -191,19 +198,12 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
   return (mouseX > x && mouseX<x+w && mouseY>y && mouseY<y+h); //check to see if it is in button bounds
 }
 
-void mousePressed() {}
-
-void touchStart() {
-  if (!touchFired) {
+void mousePressed() {
+    if (!touchFired) {
     registerTouch();
     touchFired = true;
   }
   touchDown = true;
-}
-
-void touchEnd() {
-  touchDown = false;
-  touchFired = false;
 }
 
 //you can replace all of this logic.
@@ -250,6 +250,8 @@ void registerTouch()
 }
 
 void mouseReleased() {
+  touchDown = false;
+  touchFired = false;
   touchHandled = false;
 }
 
